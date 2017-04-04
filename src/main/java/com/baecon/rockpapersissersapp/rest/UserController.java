@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.baecon.rockpapersissersapp.ApiConstants.REGISTRATION;
+import static com.baecon.rockpapersissersapp.util.ApiConstants.REGISTRATION;
 
 @RestController
 public class UserController {

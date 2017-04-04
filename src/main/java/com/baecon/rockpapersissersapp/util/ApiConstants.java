@@ -1,4 +1,4 @@
-package com.baecon.rockpapersissersapp;
+package com.baecon.rockpapersissersapp.util;
 
 /**
  * API endpoint constants.

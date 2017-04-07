@@ -8,11 +8,15 @@ import com.baecon.rockpapersissersapp.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 
 @RunWith(SpringRunner.class)
@@ -32,10 +36,15 @@ public class GameServiceTest {
     @Autowired
     private GameRepository gameRepository;
 
+    @Mock
+    private StatsService statsService;
+
     @Before
     public void setUp() {
         userService.setUserRepository(userRepository);
+        userService.setStatsService(statsService);
         gameService.setGameRepository(gameRepository);
+        gameService.setStatsService(statsService);
         firstUser = userService.registerUser("FirstUser");
         secondUser = userService.registerUser("SecondUser");
     }
@@ -44,20 +53,21 @@ public class GameServiceTest {
     public void testMakeMove() {
         Game firstMove = gameService.makeMove(firstUser, Figure.PAPER);
 
-        assertThat(firstMove.getId() != null);
+        assertTrue(firstMove.getId() != null);
         Long id = firstMove.getId();
         Game dbGame = gameRepository.findOne(id);
-        assertThat(dbGame != null);
-        assertThat(firstMove.getId().equals(dbGame.getId()));
-        assertThat(firstMove.getFirstUser().getId().equals(firstUser.getId()));
-        assertThat(firstMove.getFirstFigure().equals(Figure.ROCK));
+        assertTrue(dbGame != null);
+        assertTrue(firstMove.getId().equals(dbGame.getId()));
+        assertTrue(firstMove.getFirstUser().getId().equals(firstUser.getId()));
+        assertTrue(firstMove.getFirstFigure().equals(Figure.PAPER));
 
-        Game secondMove = gameService.makeMove(firstUser, Figure.PAPER);
+        Game secondMove = gameService.makeMove(secondUser, Figure.PAPER);
 
-        assertThat(secondMove.getId() != null);
-        assertThat(secondMove.getId().equals(firstMove.getId()));
-        assertThat(secondMove.getSecondUser().getId().equals(secondUser.getId()));
-        assertThat(secondMove.getSecondFigure().equals(Figure.ROCK));
+        assertTrue(secondMove.getId() != null);
+        assertTrue(secondMove.getId().equals(firstMove.getId()));
+        assertTrue(secondMove.getSecondUser().getId().equals(secondUser.getId()));
+        assertTrue(secondMove.getSecondFigure().equals(Figure.PAPER));
+        verify(statsService, times(1)).updateStats(any());
     }
 
 }

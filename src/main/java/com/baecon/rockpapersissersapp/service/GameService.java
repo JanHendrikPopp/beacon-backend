@@ -20,7 +20,7 @@ public class GameService {
     private GameRepository gameRepository;
 
     @Autowired
-    private RuleService ruleService;
+    private StatsService statsService;
 
     public Game makeMove(User user, Figure figure) {
         List<Game> openGames = gameRepository.findBySecondUserIsNull();
@@ -29,6 +29,7 @@ public class GameService {
             game = openGames.get(0);
             game.setSecondUser(user);
             game.setSecondFigure(figure);
+            statsService.updateStats(game);
         } else {
             game = new Game();
             game.setFirstUser(user);
@@ -46,7 +47,7 @@ public class GameService {
         this.gameRepository = gameRepository;
     }
 
-    public void setRuleService(RuleService ruleService) {
-        this.ruleService = ruleService;
+    public void setStatsService(StatsService statsService) {
+        this.statsService = statsService;
     }
 }

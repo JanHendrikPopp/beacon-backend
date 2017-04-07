@@ -7,5 +7,6 @@ public final class ApiConstants {
 
     public static final String API_VERSION = "/api/1";
     public static final String REGISTRATION = API_VERSION + "/registration";
+    public static final String MOVE = API_VERSION + "/move";
 
 }

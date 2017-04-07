@@ -27,6 +27,10 @@ public class UserService {
         return user;
     }
 
+    public User loadUser(long id) {
+        return userRepository.findOne(id);
+    }
+
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
     }

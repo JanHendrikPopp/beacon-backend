@@ -6,5 +6,6 @@ package com.baecon.rockpapersissersapp.util;
 public final class ErrorCodes {
 
     public static final String MISSING_PARAMETER = "missingParameter";
+    public static final String USER_NOT_FOUND = "userNotFound";
 
 }

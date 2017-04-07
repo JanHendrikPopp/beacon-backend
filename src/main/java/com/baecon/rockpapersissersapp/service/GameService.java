@@ -38,6 +38,10 @@ public class GameService {
         return game;
     }
 
+    public Game loadGame(long id) {
+        return gameRepository.findOne(id);
+    }
+
     public void setGameRepository(GameRepository gameRepository) {
         this.gameRepository = gameRepository;
     }

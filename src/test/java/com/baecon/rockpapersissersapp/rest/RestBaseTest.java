@@ -27,6 +27,12 @@ public class RestBaseTest {
         return restTemplate.postForEntity(url, request , String.class );
     }
 
+    protected ResponseEntity<String> getRequest(String url) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        return restTemplate.getForEntity(url, String.class );
+    }
+
     protected User generateDummyUser(long id, String name) {
         User user = new User();
         user.setName(name);

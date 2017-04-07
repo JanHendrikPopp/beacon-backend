@@ -1,7 +1,9 @@
 package com.baecon.rockpapersissersapp.rest;
 
+import com.baecon.rockpapersissersapp.exceptions.GameNotFoundException;
 import com.baecon.rockpapersissersapp.exceptions.UserNotFoundException;
 import com.baecon.rockpapersissersapp.rest.response.ErrorResponse;
+import com.baecon.rockpapersissersapp.rest.response.GameNotFoundErrorResponse;
 import com.baecon.rockpapersissersapp.rest.response.MissingParameterErrorResponse;
 import com.baecon.rockpapersissersapp.rest.response.UserNotFoundErrorResponse;
 import com.baecon.rockpapersissersapp.util.ErrorCodes;
@@ -26,6 +28,12 @@ public class GlobalExceptionHandler{
     @ExceptionHandler({UserNotFoundException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleUserNotFoundException(UserNotFoundException exception) {
-        return new UserNotFoundErrorResponse(ErrorCodes.MISSING_PARAMETER, "Could not find user.", exception.getUserId());
+        return new UserNotFoundErrorResponse(ErrorCodes.USER_NOT_FOUND, "Could not find user.", exception.getUserId());
+    }
+
+    @ExceptionHandler({GameNotFoundException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleGameNotFoundException(GameNotFoundException exception) {
+        return new GameNotFoundErrorResponse(ErrorCodes.GAME_NOT_FOUND, "Could not find game.", exception.getGameId());
     }
 }

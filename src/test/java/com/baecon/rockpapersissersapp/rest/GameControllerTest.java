@@ -37,6 +37,7 @@ public class GameControllerTest extends RestBaseTest {
     private JacksonTester<Game> json;
     private JacksonTester<ErrorResponse> errorJson;
     private JacksonTester<List<GameResult>> gameList;
+    private JacksonTester<GameResult> gameResultJson;
 
     @MockBean
     private UserService userService;
@@ -169,8 +170,10 @@ public class GameControllerTest extends RestBaseTest {
     public void testGameResult() throws IOException {
         String url = "/api/1/game/" + String.valueOf(TEST_GAMEID) + "/" + String.valueOf(TEST_USERID);
         ResponseEntity<String> response = getRequest(url);
+        GameResult result = gameResultJson.parseObject(response.getBody());
         assertTrue(response.getStatusCode().equals(HttpStatus.OK));
-        assertTrue(response.getBody().equals("\"WIN\""));
+        assertTrue(result.getOption().equals(Figure.PAPER));
+        assertTrue(result.getResult().equals(RoundResult.WIN));
     }
 
 

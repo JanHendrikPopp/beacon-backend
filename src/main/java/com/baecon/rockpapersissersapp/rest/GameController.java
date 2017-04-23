@@ -40,7 +40,7 @@ public class GameController {
     }
 
     @RequestMapping(value = GAME, method = RequestMethod.GET)
-    public RoundResult getRoundResult(@PathVariable("gameId") long gameId,
+    public GameResult getRoundResult(@PathVariable("gameId") long gameId,
                                       @PathVariable("playerId") long playerId)
             throws DetermineRoundResultException, GameNotFoundException, UserNotFoundException {
         Game game = gameService.loadGame(gameId);
@@ -51,8 +51,14 @@ public class GameController {
         if (user == null) {
             throw new UserNotFoundException(playerId);
         }
+        Figure figure;
+        if (game.getFirstUser().equals(user)) {
+            figure = game.getFirstFigure();
+        } else {
+            figure = game.getSecondFigure();
+        }
 
-        return ruleService.getRoundResult(game, user);
+        return new GameResult(figure, ruleService.getRoundResult(game, user));
     }
 
     @RequestMapping(value = ALL_GAMES, method = RequestMethod.GET)

@@ -4,10 +4,10 @@ import com.baecon.rockpapersissersapp.model.Figure;
 import com.baecon.rockpapersissersapp.model.Game;
 import com.baecon.rockpapersissersapp.model.User;
 import com.baecon.rockpapersissersapp.repository.GameRepository;
-import com.baecon.rockpapersissersapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,6 +37,13 @@ public class GameService {
         }
         game = gameRepository.save(game);
         return game;
+    }
+
+    public List<Game> getAllGames(User user) {
+        List<Game> games = new ArrayList<>();
+        games.addAll(gameRepository.findByFirstUserAndSecondUserIsNotNull(user));
+        games.addAll(gameRepository.findBySecondUserAndFirstUserIsNotNull(user));
+        return games;
     }
 
     public Game loadGame(long id) {

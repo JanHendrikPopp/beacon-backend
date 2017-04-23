@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
+
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
@@ -68,6 +70,18 @@ public class GameServiceTest {
         assertTrue(secondMove.getSecondUser().getId().equals(secondUser.getId()));
         assertTrue(secondMove.getSecondFigure().equals(Figure.PAPER));
         verify(statsService, times(1)).updateStats(any());
+    }
+
+    @Test
+    public void testGettAllGames() {
+        gameService.makeMove(firstUser, Figure.PAPER);
+        gameService.makeMove(secondUser, Figure.PAPER);
+
+        List<Game> games = gameService.getAllGames(firstUser);
+        assertTrue(games.size() == 1);
+
+        games = gameService.getAllGames(secondUser);
+        assertTrue(games.size() == 1);
     }
 
 }

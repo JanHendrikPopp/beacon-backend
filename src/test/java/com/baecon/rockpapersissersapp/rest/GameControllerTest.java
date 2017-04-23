@@ -1,8 +1,6 @@
 package com.baecon.rockpapersissersapp.rest;
 
-import com.baecon.rockpapersissersapp.model.Figure;
-import com.baecon.rockpapersissersapp.model.Game;
-import com.baecon.rockpapersissersapp.model.User;
+import com.baecon.rockpapersissersapp.model.*;
 import com.baecon.rockpapersissersapp.rest.response.GameNotFoundErrorResponse;
 import com.baecon.rockpapersissersapp.rest.response.MissingParameterErrorResponse;
 import com.baecon.rockpapersissersapp.rest.response.UserNotFoundErrorResponse;
@@ -19,6 +17,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
@@ -26,6 +26,7 @@ import static org.mockito.BDDMockito.given;
 public class GameControllerTest extends RestBaseTest {
 
     private static final String MOVE_URL = "/api/1/move";
+    private static final String ALL_GAMES_URL = "/api/1/allgamesforplayer/";
     private static final String TEST_USERNAME = "username";
     private static final long TEST_USERID = 1L;
     private static final long TEST_USERID_SND = 6L;
@@ -38,6 +39,7 @@ public class GameControllerTest extends RestBaseTest {
     private JacksonTester<MissingParameterErrorResponse> misingParameterJson;
     private JacksonTester<GameNotFoundErrorResponse> gameNotFoundJson;
     private JacksonTester<UserNotFoundErrorResponse> userNotFoundJson;
+    private JacksonTester<List<GameResult>> gameList;
 
     @MockBean
     private UserService userService;
@@ -67,6 +69,21 @@ public class GameControllerTest extends RestBaseTest {
         completeGame.setSecondFigure(Figure.ROCK);
         given(this.gameService.loadGame(TEST_GAMEID)).willReturn(completeGame);
         given(this.gameService.loadGame(TEST_INVALID_GAMEID)).willReturn(null);
+
+        List<Game> games = Arrays.asList(completeGame);
+        given(this.gameService.getAllGames(user)).willReturn(games);
+    }
+
+    @Test
+    public void testGetAllGames() throws IOException {
+        String url = ALL_GAMES_URL + TEST_USERID;
+        ResponseEntity<String> response = getRequest(url);
+        List<GameResult> results  = gameList.parseObject(response.getBody());
+
+        assertTrue(response.getStatusCode().equals(HttpStatus.OK));
+        assertTrue(results.size() == 1);
+        assertTrue(results.get(0).getOption().equals(Figure.PAPER));
+        assertTrue(results.get(0).getResult().equals(RoundResult.WIN));
     }
 
     @Test

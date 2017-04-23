@@ -3,19 +3,18 @@ package com.baecon.rockpapersissersapp.rest;
 import com.baecon.rockpapersissersapp.exceptions.DetermineRoundResultException;
 import com.baecon.rockpapersissersapp.exceptions.GameNotFoundException;
 import com.baecon.rockpapersissersapp.exceptions.UserNotFoundException;
-import com.baecon.rockpapersissersapp.model.Figure;
-import com.baecon.rockpapersissersapp.model.Game;
-import com.baecon.rockpapersissersapp.model.RoundResult;
-import com.baecon.rockpapersissersapp.model.User;
+import com.baecon.rockpapersissersapp.model.*;
+import com.baecon.rockpapersissersapp.rest.response.UserNotFoundErrorResponse;
 import com.baecon.rockpapersissersapp.service.GameService;
 import com.baecon.rockpapersissersapp.service.RuleService;
 import com.baecon.rockpapersissersapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import static com.baecon.rockpapersissersapp.util.ApiConstants.GAME;
-import static com.baecon.rockpapersissersapp.util.ApiConstants.MOVE;
-import static com.baecon.rockpapersissersapp.util.ApiConstants.REGISTRATION;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.baecon.rockpapersissersapp.util.ApiConstants.*;
 
 @RestController
 public class GameController {
@@ -55,6 +54,32 @@ public class GameController {
         }
 
         return ruleService.getRoundResult(game, user);
+    }
+
+    @RequestMapping(value = ALL_GAMES, method = RequestMethod.GET)
+    public List<GameResult> getAllGames(@PathVariable("playerId") long playerId) throws UserNotFoundException {
+        User user = userService.loadUser(playerId);
+        if (user == null) {
+            throw new UserNotFoundException(playerId);
+        }
+
+        List<GameResult> results = new ArrayList<>();
+
+        for (Game game : gameService.getAllGames(user)) {
+            Figure figure;
+            RoundResult result;
+            if (game.getFirstUser().equals(user)) {
+                figure = game.getFirstFigure();
+                result = ruleService.getRoundResult(game.getFirstFigure(), game.getSecondFigure());
+            } else {
+                figure = game.getSecondFigure();
+                result = ruleService.getRoundResult(game.getSecondFigure(), game.getFirstFigure());
+            }
+
+            results.add(new GameResult(figure, result));
+        }
+
+        return results;
     }
 
 }

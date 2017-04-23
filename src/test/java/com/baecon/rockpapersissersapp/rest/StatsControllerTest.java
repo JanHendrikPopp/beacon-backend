@@ -2,9 +2,10 @@ package com.baecon.rockpapersissersapp.rest;
 
 import com.baecon.rockpapersissersapp.model.Stats;
 import com.baecon.rockpapersissersapp.model.User;
-import com.baecon.rockpapersissersapp.rest.response.UserNotFoundErrorResponse;
+import com.baecon.rockpapersissersapp.rest.response.ErrorResponse;
 import com.baecon.rockpapersissersapp.service.StatsService;
 import com.baecon.rockpapersissersapp.service.UserService;
+import com.baecon.rockpapersissersapp.util.ErrorCodes;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +26,7 @@ public class StatsControllerTest extends RestBaseTest {
     private static final long TEST_INVALID_USERID = 2L;
 
     private JacksonTester<Stats> json;
-    private JacksonTester<UserNotFoundErrorResponse> userNotFoundJson;
+    private JacksonTester<ErrorResponse> errorJson;
 
     @MockBean
     private UserService userService;
@@ -50,9 +51,9 @@ public class StatsControllerTest extends RestBaseTest {
     public void testGameResultPlayerNotFound() throws IOException {
         String url = "/api/1/stats/" + String.valueOf(TEST_INVALID_USERID);
         ResponseEntity<String> response = getRequest(url);
-        UserNotFoundErrorResponse errorResponse = userNotFoundJson.parseObject(response.getBody());
+        ErrorResponse errorResponse = errorJson.parseObject(response.getBody());
         assertTrue(response.getStatusCode().equals(HttpStatus.BAD_REQUEST));
-        assertTrue(errorResponse.getUserId() == TEST_INVALID_USERID);
+        assertTrue(errorResponse.getErrorCode().equals(ErrorCodes.USER_NOT_FOUND));
     }
 
     @Test

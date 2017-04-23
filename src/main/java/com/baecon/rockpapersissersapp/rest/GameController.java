@@ -4,7 +4,6 @@ import com.baecon.rockpapersissersapp.exceptions.DetermineRoundResultException;
 import com.baecon.rockpapersissersapp.exceptions.GameNotFoundException;
 import com.baecon.rockpapersissersapp.exceptions.UserNotFoundException;
 import com.baecon.rockpapersissersapp.model.*;
-import com.baecon.rockpapersissersapp.rest.response.UserNotFoundErrorResponse;
 import com.baecon.rockpapersissersapp.service.GameService;
 import com.baecon.rockpapersissersapp.service.RuleService;
 import com.baecon.rockpapersissersapp.service.UserService;

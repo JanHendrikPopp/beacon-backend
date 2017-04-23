@@ -1,11 +1,10 @@
 package com.baecon.rockpapersissersapp.rest;
 
 import com.baecon.rockpapersissersapp.model.*;
-import com.baecon.rockpapersissersapp.rest.response.GameNotFoundErrorResponse;
-import com.baecon.rockpapersissersapp.rest.response.MissingParameterErrorResponse;
-import com.baecon.rockpapersissersapp.rest.response.UserNotFoundErrorResponse;
+import com.baecon.rockpapersissersapp.rest.response.ErrorResponse;
 import com.baecon.rockpapersissersapp.service.GameService;
 import com.baecon.rockpapersissersapp.service.UserService;
+import com.baecon.rockpapersissersapp.util.ErrorCodes;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,9 +35,7 @@ public class GameControllerTest extends RestBaseTest {
     private static final long TEST_INVALID_GAMEID = 5L;
 
     private JacksonTester<Game> json;
-    private JacksonTester<MissingParameterErrorResponse> misingParameterJson;
-    private JacksonTester<GameNotFoundErrorResponse> gameNotFoundJson;
-    private JacksonTester<UserNotFoundErrorResponse> userNotFoundJson;
+    private JacksonTester<ErrorResponse> errorJson;
     private JacksonTester<List<GameResult>> gameList;
 
     @MockBean
@@ -108,10 +105,10 @@ public class GameControllerTest extends RestBaseTest {
         parameters.add("beaconId", String.valueOf(TEST_BEACONID));
         parameters.add("option", "PAPER");
         ResponseEntity<String> response = postRequest(parameters, MOVE_URL);
-        UserNotFoundErrorResponse errorResponse = userNotFoundJson.parseObject(response.getBody());
+        ErrorResponse errorResponse = errorJson.parseObject(response.getBody());
 
         assertTrue(response.getStatusCode().equals(HttpStatus.BAD_REQUEST));
-        assertTrue(errorResponse.getUserId() == TEST_INVALID_USERID);
+        assertTrue(errorResponse.getErrorCode().equals(ErrorCodes.USER_NOT_FOUND));
     }
 
     @Test
@@ -120,10 +117,10 @@ public class GameControllerTest extends RestBaseTest {
         parameters.add("playerId", String.valueOf(TEST_USERID));
         parameters.add("option", "PAPER");
         ResponseEntity<String> response = postRequest(parameters, MOVE_URL);
-        MissingParameterErrorResponse errorResponse = misingParameterJson.parseObject(response.getBody());
+        ErrorResponse errorResponse = errorJson.parseObject(response.getBody());
 
         assertTrue(response.getStatusCode().equals(HttpStatus.BAD_REQUEST));
-        assertTrue(errorResponse.getMissingParameter().equals("beaconId"));
+        assertTrue(errorResponse.getErrorCode().equals(ErrorCodes.MISSING_PARAMETER));
     }
 
     @Test
@@ -132,10 +129,10 @@ public class GameControllerTest extends RestBaseTest {
         parameters.add("beaconId", String.valueOf(TEST_BEACONID));
         parameters.add("option", "PAPER");
         ResponseEntity<String> response = postRequest(parameters, MOVE_URL);
-        MissingParameterErrorResponse errorResponse = misingParameterJson.parseObject(response.getBody());
+        ErrorResponse errorResponse = errorJson.parseObject(response.getBody());
 
         assertTrue(response.getStatusCode().equals(HttpStatus.BAD_REQUEST));
-        assertTrue(errorResponse.getMissingParameter().equals("playerId"));
+        assertTrue(errorResponse.getErrorCode().equals(ErrorCodes.MISSING_PARAMETER));
     }
 
     @Test
@@ -144,28 +141,28 @@ public class GameControllerTest extends RestBaseTest {
         parameters.add("playerId", String.valueOf(TEST_USERID));
         parameters.add("beaconId", String.valueOf(TEST_BEACONID));
         ResponseEntity<String> response = postRequest(parameters, MOVE_URL);
-        MissingParameterErrorResponse errorResponse = misingParameterJson.parseObject(response.getBody());
+        ErrorResponse errorResponse = errorJson.parseObject(response.getBody());
 
         assertTrue(response.getStatusCode().equals(HttpStatus.BAD_REQUEST));
-        assertTrue(errorResponse.getMissingParameter().equals("option"));
+        assertTrue(errorResponse.getErrorCode().equals(ErrorCodes.MISSING_PARAMETER));
     }
 
     @Test
     public void testGameResultGameNotFound() throws IOException {
         String url = "/api/1/game/" + String.valueOf(TEST_GAMEID) + "/" + String.valueOf(TEST_INVALID_USERID);
         ResponseEntity<String> response = getRequest(url);
-        UserNotFoundErrorResponse errorResponse = userNotFoundJson.parseObject(response.getBody());
+        ErrorResponse errorResponse = errorJson.parseObject(response.getBody());
         assertTrue(response.getStatusCode().equals(HttpStatus.BAD_REQUEST));
-        assertTrue(errorResponse.getUserId() == TEST_INVALID_USERID);
+        assertTrue(errorResponse.getErrorCode().equals(ErrorCodes.USER_NOT_FOUND));
     }
 
     @Test
     public void testGameResultPlayerNotFound() throws IOException {
         String url = "/api/1/game/" + String.valueOf(TEST_INVALID_GAMEID) + "/" + String.valueOf(TEST_USERID);
         ResponseEntity<String> response = getRequest(url);
-        GameNotFoundErrorResponse errorResponse = gameNotFoundJson.parseObject(response.getBody());
+        ErrorResponse errorResponse = errorJson.parseObject(response.getBody());
         assertTrue(response.getStatusCode().equals(HttpStatus.BAD_REQUEST));
-        assertTrue(errorResponse.getGameId() == TEST_INVALID_GAMEID);
+        assertTrue(errorResponse.getErrorCode().equals(ErrorCodes.GAME_NOT_FOUND));
     }
 
     @Test

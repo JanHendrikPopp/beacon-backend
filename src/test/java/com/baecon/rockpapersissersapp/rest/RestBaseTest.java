@@ -14,7 +14,7 @@ import org.springframework.util.MultiValueMap;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class RestBaseTest {
+public abstract class RestBaseTest {
 
     @Autowired
     private TestRestTemplate restTemplate;

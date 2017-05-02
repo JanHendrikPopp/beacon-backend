@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 public class BeaconControllerTest extends RestBaseTest {
 
     private static final String CHECK_URL = "/api/1/isvalidbeacon/";
-    private static final String CORRECT_BEACON_ID = "f7826da6-4fa2-4e98-8024-bc5b71e0893e";
+    private static final String CORRECT_BEACON_ID = "4LKv";
     private static final String INCORRECT_BEACON_ID = "incorrect";
 
     private JacksonTester<Boolean> json;

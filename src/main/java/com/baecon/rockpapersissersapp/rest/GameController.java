@@ -28,7 +28,7 @@ public class GameController {
     private RuleService ruleService;
 
     @RequestMapping(value = MOVE, method = RequestMethod.POST)
-    public Game makeMove(@RequestParam("beaconId") long beaconId,
+    public Game makeMove(@RequestParam("beaconId") String beaconId,
                          @RequestParam("playerId") long playerId,
                          @RequestParam("option") Figure option)
             throws UserNotFoundException {

@@ -27,6 +27,20 @@ public class GameController {
     @Autowired
     private RuleService ruleService;
 
+    @RequestMapping(value = LOAD_GAME, method = RequestMethod.GET)
+    public Game loadGame(@PathVariable("gameId") long gameId) throws GameNotFoundException {
+        Game game = gameService.loadGame(gameId);
+        if (game == null) {
+            throw new GameNotFoundException(gameId);
+        }
+        return game;
+    }
+
+    @RequestMapping(value = NEW_GAME, method = RequestMethod.GET)
+    public Game loadNewGameForTv() {
+        return gameService.loadNewGameForTv();
+    }
+
     @RequestMapping(value = MOVE, method = RequestMethod.POST)
     public Game makeMove(@RequestParam("beaconId") String beaconId,
                          @RequestParam("playerId") long playerId,

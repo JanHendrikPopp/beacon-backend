@@ -32,6 +32,7 @@ public class GameService {
             statsService.updateStats(game);
         } else {
             game = new Game();
+            game.setDisplayed(false);
             game.setFirstUser(user);
             game.setFirstFigure(figure);
         }
@@ -48,6 +49,17 @@ public class GameService {
 
     public Game loadGame(long id) {
         return gameRepository.findOne(id);
+    }
+
+    public Game loadNewGameForTv() {
+        List<Game> games = gameRepository.findByDisplayed(false);
+        if (games.size() > 0) {
+            Game game = games.get(0);
+            game.setDisplayed(true);
+            gameRepository.save(game);
+            return game;
+        }
+        return null;
     }
 
     public void setGameRepository(GameRepository gameRepository) {

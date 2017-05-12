@@ -15,7 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -82,6 +82,18 @@ public class GameServiceTest {
 
         games = gameService.getAllGames(secondUser);
         assertTrue(games.size() == 1);
+    }
+
+    @Test
+    public void testLoadNewGameForTv() {
+        Game game = gameService.loadNewGameForTv();
+        assertNull(game);
+        Game move = gameService.makeMove(firstUser, Figure.PAPER);
+        assertFalse(move.isDisplayed());
+        game = gameService.loadNewGameForTv();
+        assertNotNull(game);
+        assertEquals(move.getId(), game.getId());
+        assertTrue(game.isDisplayed());
     }
 
 }

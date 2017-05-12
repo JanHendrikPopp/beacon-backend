@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 
@@ -38,6 +39,7 @@ public class GameControllerTest extends RestBaseTest {
     private JacksonTester<ErrorResponse> errorJson;
     private JacksonTester<List<GameResult>> gameList;
     private JacksonTester<GameResult> gameResultJson;
+    private JacksonTester<Game> gameJson;
 
     @MockBean
     private UserService userService;
@@ -174,6 +176,24 @@ public class GameControllerTest extends RestBaseTest {
         assertTrue(response.getStatusCode().equals(HttpStatus.OK));
         assertTrue(result.getOption().equals(Figure.PAPER));
         assertTrue(result.getResult().equals(RoundResult.WIN));
+    }
+
+    @Test
+    public void testLoadGameNotFound() throws IOException {
+        String url = "/api/1/game/" + String.valueOf(TEST_INVALID_GAMEID);
+        ResponseEntity<String> response = getRequest(url);
+        ErrorResponse errorResponse = errorJson.parseObject(response.getBody());
+        assertTrue(response.getStatusCode().equals(HttpStatus.BAD_REQUEST));
+        assertTrue(errorResponse.getErrorCode().equals(ErrorCodes.GAME_NOT_FOUND));
+    }
+
+    @Test
+    public void testLoadGame() throws IOException {
+        String url = "/api/1/game/" + String.valueOf(TEST_GAMEID);
+        ResponseEntity<String> response = getRequest(url);
+        Game result = gameJson.parseObject(response.getBody());
+        assertTrue(response.getStatusCode().equals(HttpStatus.OK));
+        assertNotNull(result);
     }
 
 

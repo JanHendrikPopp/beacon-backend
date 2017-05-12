@@ -21,6 +21,9 @@ public class Game {
     @Column
     private Figure secondFigure;
 
+    @Column
+    private boolean displayed;
+
     public Long getId() {
         return id;
     }
@@ -59,5 +62,13 @@ public class Game {
 
     public void setSecondFigure(Figure secondFigure) {
         this.secondFigure = secondFigure;
+    }
+
+    public boolean isDisplayed() {
+        return displayed;
+    }
+
+    public void setDisplayed(boolean displayed) {
+        this.displayed = displayed;
     }
 }

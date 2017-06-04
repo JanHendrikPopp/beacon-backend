@@ -1,18 +1,12 @@
 package com.baecon.rockpapersissersapp.rest;
 
-import com.baecon.rockpapersissersapp.exceptions.DetermineRoundResultException;
-import com.baecon.rockpapersissersapp.exceptions.GameNotFoundException;
 import com.baecon.rockpapersissersapp.exceptions.UserNotFoundException;
 import com.baecon.rockpapersissersapp.model.*;
-import com.baecon.rockpapersissersapp.service.GameService;
-import com.baecon.rockpapersissersapp.service.RuleService;
 import com.baecon.rockpapersissersapp.service.StatsService;
 import com.baecon.rockpapersissersapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import static com.baecon.rockpapersissersapp.util.ApiConstants.GAME;
-import static com.baecon.rockpapersissersapp.util.ApiConstants.MOVE;
 import static com.baecon.rockpapersissersapp.util.ApiConstants.STATS;
 
 @RestController

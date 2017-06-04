@@ -23,7 +23,7 @@ public class GameService {
     private StatsService statsService;
 
     public Game makeMove(User user, Figure figure) {
-        List<Game> openGames = gameRepository.findBySecondUserIsNull();
+        List<Game> openGames = gameRepository.findBySecondUserIsNullAndFirstUserNot(user);
         Game game;
         if (!openGames.isEmpty()) {
             game = openGames.get(0);

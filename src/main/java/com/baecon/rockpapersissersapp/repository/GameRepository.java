@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface GameRepository extends CrudRepository<Game, Long> {
 
-    List<Game> findBySecondUserIsNull();
+    List<Game> findBySecondUserIsNullAndFirstUserNot(User user);
 
     List<Game> findByFirstUserAndSecondUserIsNotNull(User user);
 
